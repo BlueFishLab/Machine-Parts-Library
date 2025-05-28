@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|c:\\users\\rgrab\\documents\\github\\machine-parts-library\\machine-parts-library\\machine-parts-library\\controllers\\modelscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|solutionrelative:machine-parts-library\\controllers\\modelscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 861,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,6 +27,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ModelsController.cs",
+              "DocumentMoniker": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Controllers\\ModelsController.cs",
+              "RelativeDocumentMoniker": "Machine-Parts-Library\\Controllers\\ModelsController.cs",
+              "ToolTip": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Controllers\\ModelsController.cs",
+              "RelativeToolTip": "Machine-Parts-Library\\Controllers\\ModelsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-28T13:38:20.643Z",
+              "EditorCaption": ""
             }
           ]
         },

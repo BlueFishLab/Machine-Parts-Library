@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Machine-Parts-Library")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b1b606d7d3b5b837b22299a5c409046fa5d8ec06")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6bc4a4c99c81e6cccc754811a890614203d5fa0c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Machine-Parts-Library")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Machine-Parts-Library")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
