@@ -1,9 +1,10 @@
 import argparse
 import cadquery as cq
-import os
-import time
+import io
+import base64
 import json
 import xml.etree.ElementTree as ET
+import sys
 
 SHAPE_DEFINITIONS = {
     "cube": ["size"],
@@ -12,17 +13,7 @@ SHAPE_DEFINITIONS = {
     "cone": ["radius", "height"]
 }
 
-def ensure_unique_filename(folder: str, base_name: str, extension: str) -> str:
-    counter = 0
-    filename = f"{base_name}.{extension}"
-    while os.path.exists(os.path.join(folder, filename)):
-        counter += 1
-        filename = f"{base_name}_{counter}.{extension}"
-    return os.path.join(folder, filename)
-
-def generate_shape(shape: str, size: float, radius: float, height: float, output_path: str):
-    start_time = time.time()
-
+def generate_shape(shape: str, size: float, radius: float, height: float):
     if shape == "cube":
         if size is None:
             raise ValueError("Dla sześcianu należy podać --size")
@@ -41,18 +32,13 @@ def generate_shape(shape: str, size: float, radius: float, height: float, output
         model = cq.Workplane("XY").cone(height=height, radius1=radius, radius2=0)
     else:
         raise ValueError(f"Nieznany kształt: {shape}")
+    return model
 
-    ext = os.path.splitext(output_path)[1].lower()
-    if ext in [".step", ".stp"]:
-        cq.exporters.export(model, output_path)
-    elif ext == ".stl":
-        cq.exporters.export(model, output_path, exportType="STL")
-    else:
-        raise ValueError("Nieobsługiwany format pliku. Użyj .step, .stp lub .stl")
-
-    elapsed = time.time() - start_time
-    print(f"Model ({shape}) zapisany jako: {output_path}")
-    print(f"Czas generowania: {elapsed:.3f} sekundy")
+def export_model_as_base64(model) -> str:
+    buf = io.BytesIO()
+    cq.exporters.export(model, buf, exportType="STL")
+    buf.seek(0)
+    return base64.b64encode(buf.read()).decode("utf-8")
 
 def export_info(to_format="json"):
     if to_format == "json":
@@ -70,43 +56,41 @@ def export_info(to_format="json"):
         raise ValueError("Obsługiwane formaty: json, xml")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generuje modele 3D i zapisuje jako STEP/STL.")
+    parser = argparse.ArgumentParser(description="Generuje modele 3D i zwraca jako base64 lub plik.")
     parser.add_argument("shape", nargs="?", choices=list(SHAPE_DEFINITIONS.keys()), help="Kształt do wygenerowania")
     parser.add_argument("--size", type=float, help="Rozmiar (bok sześcianu, średnica kuli)")
     parser.add_argument("--radius", type=float, help="Promień (dla walca/stożka)")
     parser.add_argument("--height", type=float, help="Wysokość (dla walca/stożka)")
-    parser.add_argument("--output", "-o", default="model.step", help="Nazwa pliku wyjściowego")
-
-    parser.add_argument("--export-info", action="store_true", help="Wypisz informacje o dostępnych kształtach i parametrach (do stdout)")
-    parser.add_argument("--export-file", help="Rozszerzenie .json lub .xml określa format (stdout)")
+    parser.add_argument("--export-info", action="store_true", help="Wypisz dostępne kształty i parametry")
+    parser.add_argument("--export-file", help="Nazwa pliku .json lub .xml do wypisania definicji")
+    parser.add_argument("--as-base64", action="store_true", help="Zamiast zapisu do pliku zwróć model jako base64")
 
     args = parser.parse_args()
 
     if args.export_info:
-        # Określenie formatu eksportu na podstawie rozszerzenia
         export_format = "json"
         if args.export_file:
-            ext = os.path.splitext(args.export_file)[1].lower()
-            if ext == ".xml":
+            ext = args.export_file.lower()
+            if ext.endswith(".xml"):
                 export_format = "xml"
-            elif ext == ".json":
+            elif ext.endswith(".json"):
                 export_format = "json"
             else:
-                raise ValueError("Nieobsługiwany format — użyj .json lub .xml")
+                raise ValueError("Obsługiwane tylko: .json, .xml")
         export_info(export_format)
     else:
         if not args.shape:
-            raise ValueError("Musisz podać kształt do wygenerowania, np. cube, sphere itd.")
-        base_name, ext = os.path.splitext(os.path.basename(args.output))
-        ext = ext.lstrip(".").lower()
-        output_folder = "examples"
-        os.makedirs(output_folder, exist_ok=True)
-        output_file = ensure_unique_filename(output_folder, base_name, ext)
+            raise ValueError("Musisz podać kształt, np. cube, sphere itd.")
 
-        generate_shape(
+        model = generate_shape(
             shape=args.shape,
             size=args.size,
             radius=args.radius,
-            height=args.height,
-            output_path=output_file
+            height=args.height
         )
+
+        if args.as_base64:
+            b64 = export_model_as_base64(model)
+            print(b64)
+        else:
+            raise NotImplementedError("Obsługa zapisu do pliku została usunięta. Użyj --as-base64.")

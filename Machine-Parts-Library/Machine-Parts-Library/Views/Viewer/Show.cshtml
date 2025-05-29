@@ -1,0 +1,44 @@
+﻿<div id="viewer" style="width: 600px; height: 600px;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.148.0/examples/js/loaders/STLLoader.js"></script>
+
+<script>
+    const base64Data = `@Html.Raw(ViewBag.ModelBase64)`;
+
+    if (base64Data && base64Data.length > 100) {
+        const binaryString = atob(base64Data);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        const loader = new THREE.STLLoader();
+        const geometry = loader.parse(bytes.buffer);
+        const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+
+        const mesh = new THREE.Mesh(geometry, material);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(600, 600);
+        document.getElementById("viewer").appendChild(renderer.domElement);
+
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(0, 1, 1).normalize();
+        scene.add(light);
+        scene.add(mesh);
+        camera.position.z = 50;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            mesh.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    } else {
+        document.getElementById("viewer").innerText = "Nie udało się wczytać modelu.";
+    }
+</script>
