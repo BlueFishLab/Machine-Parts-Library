@@ -11,4 +11,8 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\assets\calicat.stl" />
+  </ItemGroup>
+
 </Project>

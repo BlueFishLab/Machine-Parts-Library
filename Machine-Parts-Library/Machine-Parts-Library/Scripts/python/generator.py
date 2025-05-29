@@ -5,6 +5,8 @@ import base64
 import json
 import xml.etree.ElementTree as ET
 import sys
+import tempfile
+import os
 
 SHAPE_DEFINITIONS = {
     "cube": ["size"],
@@ -29,16 +31,32 @@ def generate_shape(shape: str, size: float, radius: float, height: float):
     elif shape == "cone":
         if radius is None or height is None:
             raise ValueError("Dla stożka należy podać --radius i --height")
-        model = cq.Workplane("XY").cone(height=height, radius1=radius, radius2=0)
+        # Tworzymy profil stożka i obracamy go dookoła osi
+        model = (
+            cq.Workplane("XZ")
+            .moveTo(0, 0)
+            .lineTo(0, height)
+            .lineTo(radius, 0)
+            .close()
+            .revolve()
+        )
     else:
         raise ValueError(f"Nieznany kształt: {shape}")
     return model
 
 def export_model_as_base64(model) -> str:
-    buf = io.BytesIO()
-    cq.exporters.export(model, buf, exportType="STL")
-    buf.seek(0)
-    return base64.b64encode(buf.read()).decode("utf-8")
+    with tempfile.NamedTemporaryFile(suffix=".stl", delete=False) as tmp:
+        tmp_path = tmp.name
+
+    try:
+        cq.exporters.export(model, tmp_path, exportType="STL")
+        with open(tmp_path, "rb") as f:
+            data = f.read()
+        if not data:
+            raise ValueError("Eksportowany plik STL jest pusty.")
+        return base64.b64encode(data).decode("utf-8")
+    finally:
+        os.remove(tmp_path)
 
 def export_info(to_format="json"):
     if to_format == "json":

@@ -31,8 +31,6 @@ namespace My3DApp.Controllers
 
             ViewBag.ModelBase64 = base64?.Trim();
 
-            System.IO.File.WriteAllText("last_model_base64.txt", base64);
-
             return View();
         }
     }
