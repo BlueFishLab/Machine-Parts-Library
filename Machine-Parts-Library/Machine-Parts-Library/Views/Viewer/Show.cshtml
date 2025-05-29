@@ -1,18 +1,20 @@
 ﻿@{
-    ViewData["Title"] = "Three.js Demo";
+    ViewData["Title"] = "Three.js GLB Demo";
 }
 
-<h2>Three.js w Razor Pages</h2>
+<h2>Three.js GLB Model in Razor Pages</h2>
 
 <div id="threejs-container" style="width: 800px; height: 600px; border: 1px solid #ccc;"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/GLTFLoader.js"></script>
+
 
 <script>
     const container = document.getElementById('threejs-container');
-
-    // Tworzymy scenę, kamerę i renderer
+    // Scene, camera, renderer
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f0f0); // Light gray
     const camera = new THREE.PerspectiveCamera(
         75,
         container.clientWidth / container.clientHeight,
@@ -23,27 +25,34 @@
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
-    // Tworzymy prostą zieloną kostkę
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    // Add some light
+    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+    light.position.set(0, 20, 10);
+    scene.add(light);
 
+    // Load the GLB model
 
- 
+    const loader = new THREE.GLTFLoader();
+    loader.load('/assets/maxwell.glb', function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(1, 1, 1); // Scale if needed
+        model.position.set(0, 0, 0); // Position if needed
+        scene.add(model);
 
-    // Ustawiamy kamerę
+        // Optional: animate or rotate the model
+        function animate() {
+            requestAnimationFrame(animate);
+
+            model.rotation.y += 0.005;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    }, undefined, function (error) {
+        console.error('Error loading GLB model:', error);
+    });
+
+    // Camera position
     camera.position.z = 5;
-
-    // Animacja - obracanie kostki
-    function animate() {
-        requestAnimationFrame(animate);
-
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-
-        renderer.render(scene, camera);
-    }
-
-    animate();
 </script>

@@ -1,4 +1,5 @@
 wwwroot\assets\calicat.stl
+wwwroot\assets\maxwell.glb
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\site.js
