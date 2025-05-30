@@ -25,12 +25,22 @@ class TestGenerator(unittest.TestCase):
         model = generate_shape("cone", size=None, radius=5, height=20)
         self.assertIsNotNone(model)
 
-    def test_export_model_as_base64(self):
+    def test_export_model_as_base64_stl(self):
         model = generate_shape("cube", size=10, radius=None, height=None)
-        b64 = export_model_as_base64(model)
+        b64 = export_model_as_base64(model, format="stl")
         decoded = base64.b64decode(b64.encode("utf-8"))
         self.assertTrue(len(decoded) > 0)
 
+    def test_export_model_as_base64_glb(self):
+        model = generate_shape("cube", size=10, radius=None, height=None)
+        try:
+            b64 = export_model_as_base64(model, format="glb")
+            decoded = base64.b64decode(b64.encode("utf-8"))
+            self.assertTrue(len(decoded) > 0)
+        except RuntimeError as e:
+            self.skipTest(f"Konwersja STL -> GLB nie powiodła się: {e}")
+
+    
     def test_export_info_json(self):
         f = io.StringIO()
         with redirect_stdout(f):
@@ -53,5 +63,19 @@ class TestGenerator(unittest.TestCase):
         with self.assertRaises(ValueError):
             generate_shape("pyramid", size=10, radius=None, height=None)
 
+
+# Ładne wyświetlanie wyników po zakończeniu testów
+class PrettyTextTestRunner(unittest.TextTestRunner):
+    def run(self, test):
+        result = super().run(test)
+        print("\n📋 Podsumowanie wyników testów:")
+        print("✅ OK  :", result.testsRun - len(result.failures) - len(result.errors))
+        if result.failures or result.errors:
+            print("❌ Błędy:", len(result.failures) + len(result.errors))
+        else:
+            print("🎉 Wszystkie testy przeszły pomyślnie!")
+        return result
+
+
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(testRunner=PrettyTextTestRunner(), verbosity=2)

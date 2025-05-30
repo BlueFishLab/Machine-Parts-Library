@@ -7,6 +7,8 @@ import xml.etree.ElementTree as ET
 import sys
 import tempfile
 import os
+import subprocess
+import trimesh
 
 SHAPE_DEFINITIONS = {
     "cube": ["size"],
@@ -31,7 +33,6 @@ def generate_shape(shape: str, size: float, radius: float, height: float):
     elif shape == "cone":
         if radius is None or height is None:
             raise ValueError("Dla stożka należy podać --radius i --height")
-        # Tworzymy profil stożka i obracamy go dookoła osi
         model = (
             cq.Workplane("XZ")
             .moveTo(0, 0)
@@ -44,19 +45,51 @@ def generate_shape(shape: str, size: float, radius: float, height: float):
         raise ValueError(f"Nieznany kształt: {shape}")
     return model
 
-def export_model_as_base64(model) -> str:
-    with tempfile.NamedTemporaryFile(suffix=".stl", delete=False) as tmp:
-        tmp_path = tmp.name
+def export_model_as_base64(model, format="stl"):
+    """
+    Eksportuje model CadQuery do base64 w wybranym formacie.
+    Format musi być np. "stl" lub "step".
+    GLB wymaga konwersji przez trimesh - patrz niżej.
+    """
+    format = format.lower()
+    if format == "glb":
+        # Konwersja przez trimesh (potrzebna instalacja trimesh)
+        import trimesh
+        # Konwersja CadQuery -> trimesh
+        # Załóżmy, że model to CadQuery solid
+        # Pobieramy mesh CadQuery i tworzymy trimesh.Trimesh
+        # To wymaga zbudowania mesh z CadQuery:
+        cq_mesh = model.val().mesh()  # mesh CadQuery w formie (vertices, faces)
+        vertices = cq_mesh.vertices
+        faces = cq_mesh.faces
+        # Trimesh wymaga numpy array
+        import numpy as np
+        vertices_np = np.array(vertices)
+        faces_np = np.array(faces)
+        trimesh_mesh = trimesh.Trimesh(vertices=vertices_np, faces=faces_np)
+        
+        glb_data = trimesh_mesh.export(file_type="glb")
+        return base64.b64encode(glb_data).decode("utf-8")
+    else:
+        # Dla STL, STEP, etc podajemy exportType jawnie
+        ext_map = {
+            "stl": "STL",
+            "step": "STEP",
+            "brep": "BREP",
+            "iges": "IGES",
+        }
+        export_type = ext_map.get(format)
+        if export_type is None:
+            raise ValueError(f"Nieobsługiwany format: {format}")
 
-    try:
-        cq.exporters.export(model, tmp_path, exportType="STL")
-        with open(tmp_path, "rb") as f:
-            data = f.read()
-        if not data:
-            raise ValueError("Eksportowany plik STL jest pusty.")
+        with tempfile.NamedTemporaryFile(suffix=f".{format}", delete=False) as tmp_file:
+            model.export(tmp_file.name, exportType=export_type)
+            tmp_file.close()
+            with open(tmp_file.name, "rb") as f:
+                data = f.read()
+            os.unlink(tmp_file.name)  # usuń tymczasowy plik
+
         return base64.b64encode(data).decode("utf-8")
-    finally:
-        os.remove(tmp_path)
 
 def export_info(to_format="json"):
     if to_format == "json":
@@ -82,6 +115,7 @@ if __name__ == "__main__":
     parser.add_argument("--export-info", action="store_true", help="Wypisz dostępne kształty i parametry")
     parser.add_argument("--export-file", help="Nazwa pliku .json lub .xml do wypisania definicji")
     parser.add_argument("--as-base64", action="store_true", help="Zamiast zapisu do pliku zwróć model jako base64")
+    parser.add_argument("--format", choices=["stl", "glb"], default="glb", help="Format eksportu: glb (domyślny) lub stl")
 
     args = parser.parse_args()
 
@@ -108,7 +142,7 @@ if __name__ == "__main__":
         )
 
         if args.as_base64:
-            b64 = export_model_as_base64(model)
+            b64 = export_model_as_base64(model, export_format=args.format)
             print(b64)
         else:
             raise NotImplementedError("Obsługa zapisu do pliku została usunięta. Użyj --as-base64.")

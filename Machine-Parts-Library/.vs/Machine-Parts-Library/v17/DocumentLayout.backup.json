@@ -5,6 +5,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|c:\\users\\rgrab\\documents\\github\\machine-parts-library\\machine-parts-library\\machine-parts-library\\views\\viewer\\show.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|solutionrelative:machine-parts-library\\views\\viewer\\show.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|c:\\users\\rgrab\\documents\\github\\machine-parts-library\\machine-parts-library\\machine-parts-library\\controllers\\viewercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|solutionrelative:machine-parts-library\\controllers\\viewercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|c:\\users\\rgrab\\documents\\github\\machine-parts-library\\machine-parts-library\\machine-parts-library\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{783A7AD8-7F25-42BB-9C38-BF688A484A77}|Machine-Parts-Library\\Machine-Parts-Library.csproj|solutionrelative:machine-parts-library\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 861,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,13 +38,39 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ViewerController.cs",
+              "DocumentMoniker": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Controllers\\ViewerController.cs",
+              "RelativeDocumentMoniker": "Machine-Parts-Library\\Controllers\\ViewerController.cs",
+              "ToolTip": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Controllers\\ViewerController.cs*",
+              "RelativeToolTip": "Machine-Parts-Library\\Controllers\\ViewerController.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-30T11:18:58.607Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Machine-Parts-Library\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Machine-Parts-Library\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-30T11:18:57.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Show.cshtml",
               "DocumentMoniker": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Views\\Viewer\\Show.cshtml",
               "RelativeDocumentMoniker": "Machine-Parts-Library\\Views\\Viewer\\Show.cshtml",
               "ToolTip": "C:\\Users\\rgrab\\Documents\\Github\\Machine-Parts-Library\\Machine-Parts-Library\\Machine-Parts-Library\\Views\\Viewer\\Show.cshtml*",
               "RelativeToolTip": "Machine-Parts-Library\\Views\\Viewer\\Show.cshtml*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-05-28T19:17:14.487Z",
               "EditorCaption": ""

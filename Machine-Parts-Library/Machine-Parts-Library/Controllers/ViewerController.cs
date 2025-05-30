@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Globalization;
 
 namespace My3DApp.Controllers
 {
@@ -11,7 +10,7 @@ namespace My3DApp.Controllers
             var psi = new ProcessStartInfo
             {
                 FileName = "python",
-                Arguments = $"Scripts/python/generator.py cube --size {side} --as-base64",
+                Arguments = $"Scripts/python/generator.py cube --size {side.ToString(System.Globalization.CultureInfo.InvariantCulture)} --as-base64 --format glb",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
@@ -27,7 +26,6 @@ namespace My3DApp.Controllers
                     process.WaitForExit();
                 }
             }
-
 
             ViewBag.ModelBase64 = base64?.Trim();
 
