@@ -6,3 +6,8 @@ Functions that the generator should meet:
 - should be able to return a list of models that it is able to generate as json
 - it should export to a file and to the standard output
 - should exportx to the file and to the standard output, all its functionalities should be processed
+
+projekt/
+├── models.py        # Klasy Cube, Sphere, Cone, Cylinder, BaseModel
+├── generator.py     # Klasa Generator
+└── main.py          # Logika CLI (argparse) i uruchomienie programu
