@@ -12,6 +12,14 @@ class TestGenerator(unittest.TestCase):
     def setUp(self):
         self.gen = Generator()
 
+    def test_save_cube_glb_to_file(self):
+        model = self.gen.generate_model("cube", size=10, radius=None, height=None)
+        b64 = self.gen.export_model_as_base64(model, "glb")
+        binary_data = base64.b64decode(b64.encode("utf-8"))
+        with open("test.glb", "wb") as f:
+            f.write(binary_data)
+        self.assertTrue(len(binary_data) > 0)
+
     def test_generate_cube(self):
         model = self.gen.generate_model("cube", size=10, radius=None, height=None)
         self.assertIsNotNone(model)

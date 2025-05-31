@@ -5,12 +5,12 @@ namespace My3DApp.Controllers
 {
     public class ViewerController : Controller
     {
-        public IActionResult Show(float side)
+        public IActionResult Show()
         {
             var psi = new ProcessStartInfo
             {
                 FileName = "python",
-                Arguments = $"Scripts/python/generator.py cube --size {side.ToString(System.Globalization.CultureInfo.InvariantCulture)} --as-base64 --format glb",
+                Arguments = "Scripts/python/main.py cube --size 10 --as-base64 --format glb",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
