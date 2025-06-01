@@ -7,10 +7,16 @@ namespace My3DApp.Controllers
     {
         public IActionResult Show()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GenerateModel(string shape = "cube", int size = 10)
+        {
             var psi = new ProcessStartInfo
             {
                 FileName = "python",
-                Arguments = "Scripts/python/main.py cube --size 10 --as-base64 --format glb",
+                Arguments = $"Scripts/python/main.py {shape} --size {size} --as-base64 --format glb",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
@@ -27,9 +33,7 @@ namespace My3DApp.Controllers
                 }
             }
 
-            ViewBag.ModelBase64 = base64?.Trim();
-
-            return View();
+            return Content(base64?.Trim());
         }
     }
 }

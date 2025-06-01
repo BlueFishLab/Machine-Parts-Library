@@ -5,54 +5,92 @@
 
 <h2>Three.js GLB Model from Generator</h2>
 
-<div id="threejs-container" style="width: 800px; height: 600px; border: 1px solid #ccc;"></div>
+<div>
+    <label>Figure:</label>
+    <select id="shape-select">
+        <option value="cube">Cube</option>
+        <option value="sphere">Sphere</option>
+        <option value="cylinder">Cylinder</option>
+    </select>
+
+    <label>Size: <span id="size-label">10</span></label>
+    <input type="range" id="size-slider" min="1" max="50" value="10" />
+
+    <button id="generate-button">Generate</button>
+</div>
+
+<div id="threejs-container" style="width: 800px; height: 600px; border: 1px solid #ccc; margin-top: 20px;"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/GLTFLoader.js"></script>
 
 <script>
-    const base64 = "@base64";
-
     const container = document.getElementById('threejs-container');
+    const sizeSlider = document.getElementById('size-slider');
+    const sizeLabel = document.getElementById('size-label');
+    const shapeSelect = document.getElementById('shape-select');
+    const generateButton = document.getElementById('generate-button');
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    let scene, camera, renderer, model;
 
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        container.clientWidth / container.clientHeight,
-        0.1,
-        1000
-    );
+    sizeSlider.addEventListener('input', () => {
+        sizeLabel.textContent = sizeSlider.value;
+    });
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
+    function initThreeJS() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0);
 
-    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
-    light.position.set(0, 20, 10);
-    scene.add(light);
-
-    const loader = new THREE.GLTFLoader();
-
-    const dataUrl = "data:application/octet-stream;base64," + base64;
-
-    loader.load(dataUrl, function (gltf) {
-        const model = gltf.scene;
-        model.scale.set(1, 1, 1);
-        model.position.set(0, 0, 0);
-        scene.add(model);
-
+        camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
         camera.position.z = 15;
 
-        function animate() {
-            requestAnimationFrame(animate);
-            model.rotation.y += 0.005;
-            renderer.render(scene, camera);
-        }
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
 
-        animate();
-    }, undefined, function (error) {
-        console.error("Błąd ładowania modelu GLB:", error);
+        const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+        light.position.set(0, 20, 10);
+        scene.add(light);
+    }
+
+    function clearModel() {
+        if (model) {
+            scene.remove(model);
+        }
+    }
+
+    function loadModel(base64) {
+        const loader = new THREE.GLTFLoader();
+        const dataUrl = "data:application/octet-stream;base64," + base64;
+
+        loader.load(dataUrl, function (gltf) {
+            clearModel();
+            model = gltf.scene;
+            model.scale.set(1, 1, 1);
+            model.position.set(0, 0, 0);
+            scene.add(model);
+        }, undefined, function (error) {
+            console.error("Błąd ładowania modelu GLB:", error);
+        });
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        if (model) model.rotation.y += 0.005;
+        renderer.render(scene, camera);
+    }
+
+    generateButton.addEventListener('click', () => {
+        const size = sizeSlider.value;
+        const shape = shapeSelect.value;
+
+        fetch(`/Viewer/GenerateModel?shape=${shape}&size=${size}`)
+            .then(res => res.text())
+            .then(base64 => {
+                loadModel(base64.trim());
+            });
     });
+
+    initThreeJS();
+    animate();
 </script>
